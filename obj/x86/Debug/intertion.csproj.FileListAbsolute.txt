@@ -1,0 +1,5 @@
+/Users/user/Projects/intertion/intertion/bin/Debug/intertion.exe
+/Users/user/Projects/intertion/intertion/bin/Debug/intertion.pdb
+/Users/user/Projects/intertion/intertion/obj/x86/Debug/intertion.csproj.CoreCompileInputs.cache
+/Users/user/Projects/intertion/intertion/obj/x86/Debug/intertion.exe
+/Users/user/Projects/intertion/intertion/obj/x86/Debug/intertion.pdb
