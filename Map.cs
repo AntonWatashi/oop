@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using static System.Console;
 
 namespace intertion
@@ -8,6 +8,7 @@ namespace intertion
         char award;
         char trap;
 
+
         public Map(char award, char trap)
         {
             this.award = award;
@@ -16,78 +17,27 @@ namespace intertion
 
         public void DrawMap(int[,] map)
         {
+            int[] num = new int[] { 1, 7, 4, 8, 6, 2, 3, 5, 10, 11, 12 };
+            char[] sym = new char[] { '║', '═', '╔', '╚', '╝', award, trap, '╗', '↟', '↝', '◎'  };
+            ConsoleColor[] colors = new ConsoleColor[] {ConsoleColor.Green,
+                ConsoleColor.Green, ConsoleColor.Green, ConsoleColor.Green,
+                ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Red,
+                ConsoleColor.Green, ConsoleColor.Green, ConsoleColor.Green, ConsoleColor.Green};
+
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    if (map[i, j] == 1)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('║');
-                    }
-                    if (map[i, j] == 7)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('═');
-                    }
-                    if (map[i, j] == 4)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('╔');
-                    }
-                    if (map[i, j] == 8)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('╚');
-                    }
-                    if (map[i, j] == 6)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('╝');
-                    }
-                    if (map[i, j] == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write(award);
-                    }
-                    if (map[i, j] == 3)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write(trap);
-                    }
 
-                    if (map[i, j] == 5)
+                    for (int k = 0; k < num.Length  ; k++)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('╗');
+                        if (num[k] == map[i, j])
+                        {
+                            Console.ForegroundColor = colors[k];
+                            Console.SetCursorPosition(j, i);
+                            Console.Write(sym[k]);
+                        }
                     }
-                    if (map[i, j] == 10)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('↟');
-                    }
-                    if (map[i, j] == 11)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('⟿');
-                    }
-                    if (map[i, j] == 12)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(j, i);
-                        Console.Write('◎');
-                    }
-
                         
                 }
 
@@ -97,4 +47,3 @@ namespace intertion
 
     }
 };
-
