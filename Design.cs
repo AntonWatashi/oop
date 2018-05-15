@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace intertion
 {
-    public struct Design
+    public struct Design 
     {
         public   void Loading(int x, int y)
         {
@@ -29,40 +29,42 @@ namespace intertion
 
         }
 
-        public  void Menu()
+        public void Menu(int x, int y)
         {
+            string[] inertia = new string[]
+               {"╔══╦═╗ ╔╦═══╦═══╦════╦══╦═══╗",
+                "╚╣╠╣║╚╗║║╔══╣╔═╗║╔╗╔╗╠╣╠╣╔═╗║",
+                " ║║║║╚╗║║╔══╣╔╗╔╝ ║║  ║║║╚═╝║",
+                "╚══╩╝ ╚═╩═══╩╝╚═╝ ╚╝ ╚══╩╝ ╚╝"};
+
+
+
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.SetCursorPosition(25, 6);
-            Console.Write("╔══╦═╗ ╔╦═══╦═══╦════╦══╦═══╗");
-            Console.SetCursorPosition(25, 7);
-            Console.Write("╚╣╠╣║╚╗║║╔══╣╔═╗║╔╗╔╗╠╣╠╣╔═╗║");
-            Console.SetCursorPosition(25, 8);
-            Console.Write(" ║║║╔╗╚╝║╚══╣╚═╝╠╝║║╚╝║║║║ ║║");
-            Console.SetCursorPosition(25, 9);
-            Console.Write(" ║║║║╚╗║║╔══╣╔╗╔╝ ║║  ║║║╚═╝║");
-            Console.SetCursorPosition(25, 10);
-            Console.Write("╔╣╠╣║ ║║║╚══╣║║╚╗ ║║ ╔╣╠╣╔═╗║");
-            Console.SetCursorPosition(25, 11);
-            Console.Write("╚══╩╝ ╚═╩═══╩╝╚═╝ ╚╝ ╚══╩╝ ╚╝");
-            Console.SetCursorPosition(30, 13);
+            for (int i = 0; i < inertia.Length; i++)
+            {
+                Console.SetCursorPosition(x, y);
+                Console.Write(inertia[i]);
+                y++;
+            }
+            Console.SetCursorPosition(30, y + 2 );
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Press E To Continue");
         }
 
         public void Select(int x, int y, char pointer)
         {
+            string[] menu = new string[] { "Start", "Levels", "About", "Quit" };
             int click = 5;
             Console.Clear();
             int temp = y;
+            int _temp = y;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(x + 10, y);
-            Console.Write("Start");
-            Console.SetCursorPosition(x + 10, y + 1);
-            Console.Write("Levels");
-            Console.SetCursorPosition(x + 10, y + 2);
-            Console.Write("About");
-            Console.SetCursorPosition(x + 10, y + 3);
-            Console.Write("Quit");
+            for (int i = 0; i < menu.Length; i++)
+            {
+                Console.SetCursorPosition(x + 10, _temp);
+                Console.Write(menu[i]);
+                _temp++;
+            }
             while (true)
             {
 
@@ -80,8 +82,6 @@ namespace intertion
                     Console.SetCursorPosition(x + 5, y - 1);
                     Console.Write(' ');
                     Console.SetCursorPosition(x + 5, y);
-
-
 
                 }
 
