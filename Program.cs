@@ -11,7 +11,7 @@ namespace intertion
     {
         public static void Main(string[] args)
         {
-            
+
             //design
             Console.CursorVisible = false;
             Console.CursorVisible = false;
@@ -19,113 +19,49 @@ namespace intertion
             char player = '♛';
             char award = '♟';
             char rest = '◴';
-            var map1 = FS.ParseLevel(File.ReadAllLines("map1.txt"));
+            var level = FS.ParseLevel(File.ReadAllLines("map1.txt"));
 
-            var map = new Map(award, trap); // char award, char trap
-
-           
-
-
-           
-            var design = new Design();
-
-
-            design.Menu();
-
-            var menu = Console.ReadKey(true);
-            if (menu.Key == ConsoleKey.E)
-            {
-                design.Select(25,8,'☞');
+            var map = new Map(); // char award, char trap
+            //design
+                var design = new Design();
+                design.Menu(25, 6);
+                design.Select(25, 8, '☞');
                 design.Loading(28, 10);
 
-
-
-                //design
+                
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
 
+            //player creation
 
-               
+            var hero = new Player(5, 5, player);
+                
+            //Hud creation ( hp and points)
+            Design.hud(hero);
 
+            // update object
+            var upd = new Update(hero, trap, player, award, rest, level);
 
-                //player creation
-
-                var hero = new Player(5, 5, player);
-                Console.ForegroundColor = ConsoleColor.White;
-
-                Console.SetCursorPosition(45, 7);
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("Your Points: " + hero.points);
-
-
-
-
-                // 
-                var upd = new Update(hero, trap, player, award, rest, map1);
-
-
-
-                map.DrawMap(map1);
+            Map.DrawMap(level);
+                //enemy.Draw();
                 hero.Draw();
                 design.Rules(hero, trap, award, rest, player);
-                //Thread sw = new Thread(stopWatch);
-                //sw.Start();
+            //Thread sw = new Thread(stopWatch);
+            //sw.Start();
 
-                //game
-                while (true)
+            //game
+            while (true)
+            {
+
+                if (Console.KeyAvailable)
                 {
-                    
-                    if (Console.KeyAvailable)
-                    {
-                        
-                        var key = Console.ReadKey(true);
-                        upd.Start(key);
 
-
-
-                    }
-
-                   
-                   
+                    var key = Console.ReadKey(true);
+                    upd.Start(key);
 
 
 
                 }
-                    
             }
-
-           
-           
-
-        
-
         }
-        //static public void stopWatch()
-        //{
-        //    int minutes = 0;
-        //    int seconds = 0;
-        //    Console.SetCursorPosition(42, 12);
-        //    Console.Write("Time to end: ");
-        //    Console.SetCursorPosition(55, 12);
-        //    Console.Write(minutes + ":" + seconds);
-        //    while (minutes < 1)
-        //    {
-        //        Console.SetCursorPosition(55, 12);
-        //        Console.Write(minutes + ":" + seconds);
-        //        seconds += 1;
-        //        if (seconds % 60 == 0)
-        //        {
-        //            minutes += 1;
-        //            seconds -= 60;
-        //        }
-
-        //        Thread.Sleep(100);
-
-        //    }
-        //    Console.Clear();
-        //    Console.Write("You Lost!");
-
-        //    Environment.Exit(0);
-
-        //}
     }
 }
