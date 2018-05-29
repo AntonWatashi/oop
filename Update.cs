@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -9,16 +9,16 @@ namespace intertion
     {
 
         public Player hero;
-       
+
         char trap;
         char player;
         char award;
         char rest;
-        int[,] map;
+        Cell[,] map;
         bool check;
 
         //constructor
-        public Update(Player hero, char trap, char player, char award, char rest, int[,] map)
+        public Update(Player hero, char trap, char player, char award, char rest, Cell[,] map)
         {
             this.hero = hero;
             this.trap = trap;
@@ -34,16 +34,16 @@ namespace intertion
         //Moving
         public void Start(ConsoleKeyInfo key)
         {
-            int awards = 0; 
+            int awards = 0;
             check = false;
-           
+
             if (key.Key == ConsoleKey.RightArrow)
             {
                 _moveRight();
             }
             else if (key.Key == ConsoleKey.LeftArrow)
             {
-                
+
                 _moveLeft();
 
             }
@@ -54,25 +54,25 @@ namespace intertion
             }
             else if (key.Key == ConsoleKey.UpArrow)
             {
-                
+
                 _moveUp();
-             
+
             }
             //drawing hero
             Draw();
-            if (hero.points < 0)
+            if (hero.hp < 1)
             {
                 Console.Clear();
                 Console.SetCursorPosition(30, 10);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("GAME OVER!");
                 Environment.Exit(0);
-            } 
+            }
             else
             {
-                foreach(int i in map)
+                foreach (Cell i in map)
                 {
-                    if (i == 2)
+                    if (i == Cell.AWARD)
                         awards += 1;
                 }
                 if (awards == 0)
@@ -91,24 +91,16 @@ namespace intertion
         {
             Draw();
             Collision();
-
-
-
-
-
-
             Thread.Sleep(40);
         }
         //method to draw hero
         private void Draw()
         {
-
             Console.SetCursorPosition(hero.x, hero.y);
             Console.Write(player);
-
         }
         //method to check collisions
-        public void Collision ()
+        public void Collision()
         {
             if (hero.direction == "right")
                 _collision(1, 0);
@@ -121,23 +113,23 @@ namespace intertion
 
 
 
-            
+
         }
         //if collision == true  then we shold detect with what object our collsion happened
 
-        private void _collision (int z, int c)
+        private void _collision(int z, int c)
         {
 
-            if (map[hero.y + c, hero.x + z] == 3 || map[hero.y + c, hero.x + z] == 2)
+            if (map[hero.y + c, hero.x + z] == Cell.AWARD || map[hero.y + c, hero.x + z] == Cell.TRAP)
             {
                 //points 
-                if (map[hero.y + c, hero.x + z] == 3)
-                    hero.points -= 100;
+                if (map[hero.y + c, hero.x + z] == Cell.TRAP)
+                    hero.hp -= 1;
                 else
                     hero.points += 100;
                 
                 check = true;
-                map[hero.y + c, hero.x + z] = 0;
+                map[hero.y + c, hero.x + z] = Cell.GAP;
                 Console.SetCursorPosition(45, 7);
                 Console.Write("                     ");
 
@@ -145,24 +137,23 @@ namespace intertion
                 //delete object after collision
                 Console.SetCursorPosition(hero.x + z, hero.y + c);
                 Console.Write(' ');
- 
-               
+
+
             }
-            if(map[hero.y + c, hero.x + z] == 10)
+            if (map[hero.y + c, hero.x + z] == Cell.SHIELD)
             {
-                
-                hero.direction = "up";
-                _moveUp();
-                check = true;
+
+                shield(hero);
+
             }
-            if (map[hero.y + c, hero.x + z] == 11)
+            if (map[hero.y + c, hero.x + z] == Cell.ARROW)
             {
 
                 hero.direction = "right";
                 _moveRight();
                 check = true;
-            } 
-            if (map[hero.y + c , hero.x  + z] == 12)
+            }
+            if (map[hero.y + c, hero.x + z] == Cell.TP)
             {
                 check = true;
                 bool _check = false;
@@ -170,13 +161,13 @@ namespace intertion
                 {
                     for (int x = 0; x < map.GetLength(1); x++)
                     {
-                        
-                        if(map[y, x] == 12 && y != hero.y + c && x != hero.x + z)
+
+                        if (map[y, x] == Cell.TP && y != hero.y + c && x != hero.x + z)
                         {
-                            
+
                             hero.Clear();
-                            hero.x = x  + z ;
-                            hero.y = y + c ;
+                            hero.x = x + z;
+                            hero.y = y + c;
                             _check = true;
 
                             break;
@@ -185,20 +176,60 @@ namespace intertion
                     }
                 }
                 upd();
-                
+
 
 
             }
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 7);
+            Console.Write("Your HeatPoints: ");
+            Console.Write("        ");
+            Console.SetCursorPosition(62, 7);
+            for (int i = 0; i < hero.hp; i++)
+            {
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write('❤');
+                Console.Write(' ');
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(45, 9);
             Console.Write("Your Points: " + hero.points);
 
-           
+
         }
-        private void _moveLeft ()
+
+        private void shield (Player hero)
+        {
+            if (hero.direction == "up") 
+            {
+                 _moveRight();
+                check = true;
+                return;
+            }
+            else if (hero.direction == "right")
+            {
+                _moveUp();
+                check = true;
+                return;
+            }
+            else if (hero.direction == "left")
+            {
+                _moveDown();
+                check = true;
+                return;
+            }
+            else if (hero.direction == "down")
+            {
+                _moveLeft();
+                check = true;
+                return;
+            }
+        } 
+        private void _moveLeft()
         {
             hero.direction = "left";
-            while (map[hero.y, hero.x - 1] == 0)
+            while (map[hero.y, hero.x - 1] == Cell.GAP)
             {
 
 
@@ -208,15 +239,15 @@ namespace intertion
                 upd();
 
 
-               
+
 
             }
         }
 
-        private void _moveUp ()
+        private void _moveUp()
         {
             hero.direction = "up";
-            while (map[hero.y - 1, hero.x] == 0)
+            while (map[hero.y - 1, hero.x] == Cell.GAP)
             {
 
                 hero.y -= 1;
@@ -230,15 +261,15 @@ namespace intertion
 
         }
 
-        private void _moveRight ()
+        private void _moveRight()
         {
             hero.direction = "right";
-            while (map[hero.y, hero.x + 1] == 0)
+            while (map[hero.y, hero.x + 1] == Cell.GAP)
             {
 
                 hero.x += 1;
                 Console.SetCursorPosition(hero.x - 1, hero.y);
-                Console.Write(' ');
+                Console.Write(Cell.GAP.sym);
                 upd();
 
 
@@ -247,10 +278,10 @@ namespace intertion
             }
         }
 
-        private void _moveDown ()
+        private void _moveDown()
         {
             hero.direction = "down";
-            while (map[hero.y + 1, hero.x] == 0)
+            while (map[hero.y + 1, hero.x] == Cell.GAP)
             {
 
 
@@ -265,11 +296,6 @@ namespace intertion
             }
 
         }
-        }
-
-
-        
-       
-
     }
+}
 
