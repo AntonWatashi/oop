@@ -50,6 +50,27 @@ namespace intertion
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Press E To Continue");
         }
+        public static void hud (Player hero)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(45, 9);
+            Console.Write("Your Points: " + hero.points);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(45, 7);
+            Console.Write("Your HeatPoints: ");
+            Console.Write("        ");
+            Console.SetCursorPosition(62, 7);
+            for (int i = 0; i < hero.hp; i++)
+            {
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write('❤');
+                Console.Write(' ');
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(45, 9);
+            Console.Write("Your Points: " + hero.points);}
+
 
         public void Select(int x, int y, char pointer)
         {
@@ -72,7 +93,7 @@ namespace intertion
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.Write(pointer);
 
-                var key = Console.ReadKey();
+                var key = Console.ReadKey(true);
 
                 if (key.Key == ConsoleKey.DownArrow && click > 2)
                 {
