@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.IO;
 
 namespace intertion
 {
@@ -10,95 +11,45 @@ namespace intertion
 
         public Player hero;
 
-        char trap;
-        char player;
-        char award;
-        char rest;
         Cell[,] map;
         bool check;
 
         //constructor
-        public Update(Player hero, char trap, char player, char award, char rest, Cell[,] map)
+        public Update(Player hero, Cell[,] map)
         {
             this.hero = hero;
-            this.trap = trap;
-            this.rest = rest;
-            this.player = player;
-            this.award = award;
             this.map = map;
             this.check = false;
-
-
-
         }
         //Moving
         public void Start(ConsoleKeyInfo key)
         {
-            int awards = 0;
+            
             check = false;
-
+            //read key
             if (key.Key == ConsoleKey.RightArrow)
-            {
                 _moveRight();
-            }
             else if (key.Key == ConsoleKey.LeftArrow)
-            {
-
                 _moveLeft();
-
-            }
             else if (key.Key == ConsoleKey.DownArrow)
-            {
-
                 _moveDown();
-            }
             else if (key.Key == ConsoleKey.UpArrow)
-            {
-
                 _moveUp();
 
-            }
             //drawing hero
-            Draw();
-            if (hero.hp < 1)
-            {
-                Console.Clear();
-                Console.SetCursorPosition(30, 10);
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("GAME OVER!");
-                Environment.Exit(0);
-            }
-            else
-            {
-                foreach (Cell i in map)
-                {
-                    if (i == Cell.AWARD)
-                        awards += 1;
-                }
-                if (awards == 0)
-                {
-                    Console.Clear();
-                    Console.SetCursorPosition(30, 10);
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine("YOU WON!");
-                    Environment.Exit(0);
-                }
-            }
+            hero.Draw();
+            //win or lose check
+            winOrLose();
 
         }
         //each 0.040 sec update. Hero drawing and collision checking
         private void upd()
         {
-            Draw();
+            hero.Draw();
             Collision();
             Thread.Sleep(40);
         }
-        //method to draw hero
-        private void Draw()
-        {
-            Console.SetCursorPosition(hero.x, hero.y);
-            Console.Write(player);
-        }
+
         //method to check collisions
         public void Collision()
         {
@@ -110,45 +61,22 @@ namespace intertion
                 _collision(0, -1);
             else if (hero.direction == "down")
                 _collision(0, 1);
-
-
-
-
         }
         //if collision == true  then we shold detect with what object our collsion happened
 
         private void _collision(int z, int c)
         {
-
+            //if collision player hited in award or trap than we REcount points
             if (map[hero.y + c, hero.x + z] == Cell.AWARD || map[hero.y + c, hero.x + z] == Cell.TRAP)
             {
-                //points 
-                if (map[hero.y + c, hero.x + z] == Cell.TRAP)
-                    hero.hp -= 1;
-                else
-                    hero.points += 100;
-                
-                check = true;
-                map[hero.y + c, hero.x + z] = Cell.GAP;
-                Console.SetCursorPosition(45, 7);
-                Console.Write("                     ");
-
-
-                //delete object after collision
-                Console.SetCursorPosition(hero.x + z, hero.y + c);
-                Console.Write(' ');
-
-
+                pointsCounter( z, c);
             }
             if (map[hero.y + c, hero.x + z] == Cell.SHIELD)
             {
-
                 shield(hero);
-
             }
             if (map[hero.y + c, hero.x + z] == Cell.ARROW)
             {
-
                 hero.direction = "right";
                 _moveRight();
                 check = true;
@@ -164,7 +92,6 @@ namespace intertion
 
                         if (map[y, x] == Cell.TP && y != hero.y + c && x != hero.x + z)
                         {
-
                             hero.Clear();
                             hero.x = x + z;
                             hero.y = y + c;
@@ -175,14 +102,73 @@ namespace intertion
                         if (_check) break;
                     }
                 }
-                upd();
-
-
-
             }
+            //update points and hp
+            hudUpd();
+        }
+        private void winOrLose()
+        {
+            int awards = 0;
+            if (hero.hp < 1)
+            {
+                if (File.Exists("Score.txt"))
+                {
+                    string[] res = new string[] { hero.name, hero.points.ToString() };
+                    var m = File.ReadAllLines("Score.txt");
+                    File.AppendAllLines("Score.txt", res);
+                }
+                Console.Clear();
+                Console.SetCursorPosition(30, 10);
+                Console.ForegroundColor = ConsoleColor.White;
+                if (hero.counter > 1)
+                    hero.counter -= 1;
+                hero.win = true;
+                Console.WriteLine("GAME OVER!");
+            }
+            else
+            {
+                foreach (Cell i in map)
+                {
+                    if (i == Cell.AWARD)
+                        awards += 1;
+                }
+                if (awards == 0)
+                {
+                    if (File.Exists("Score.txt"))
+                    {
+                        string[] res = new string[] { hero.name, hero.points.ToString() };
+                        File.AppendAllLines("Score.txt", res);
+                    }
+                    Console.Clear();
+                    Console.SetCursorPosition(30, 10);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("YOU WON!");
+                    Console.Clear();
+                    hero.win = true;
+                }
+            }
+        }
+        private void pointsCounter(int z, int c)
+        {
+            if (map[hero.y + c, hero.x + z] == Cell.TRAP)
+                hero.hp -= 1;
+            else
+                hero.points += 100;
+            check = true;
+            map[hero.y + c, hero.x + z] = Cell.GAP;
+            Console.SetCursorPosition(45, 7);
+            Console.Write("                     ");
+
+            //delete object after collision
+            Console.SetCursorPosition(hero.x + z, hero.y + c);
+            Console.Write(' ');
+        }
+
+        private void hudUpd()
+        {
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 7);
-            Console.Write("Your HeatPoints: ");
+            Console.Write("{0} HeatPoints: ", hero.name);
             Console.Write("        ");
             Console.SetCursorPosition(62, 7);
             for (int i = 0; i < hero.hp; i++)
@@ -194,10 +180,10 @@ namespace intertion
             }
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 9);
-            Console.Write("Your Points: " + hero.points);
-
+            Console.Write("{0} Points: " + hero.points, hero.name);
 
         }
+
 
         private void shield (Player hero)
         {
@@ -232,67 +218,47 @@ namespace intertion
             while (map[hero.y, hero.x - 1] == Cell.GAP)
             {
 
-
                 hero.x -= 1;
                 Console.SetCursorPosition(hero.x + 1, hero.y);
                 Console.Write(' ');
                 upd();
-
-
-
-
+                if (check) break;
             }
         }
-
         private void _moveUp()
         {
             hero.direction = "up";
             while (map[hero.y - 1, hero.x] == Cell.GAP)
             {
-
                 hero.y -= 1;
                 Console.SetCursorPosition(hero.x, hero.y + 1);
                 Console.Write(' ');
                 upd();
-
-
                 if (check) break;
             }
-
         }
-
         private void _moveRight()
         {
             hero.direction = "right";
             while (map[hero.y, hero.x + 1] == Cell.GAP)
             {
-
                 hero.x += 1;
                 Console.SetCursorPosition(hero.x - 1, hero.y);
                 Console.Write(Cell.GAP.sym);
                 upd();
-
-
                 if (check) break;
-
             }
         }
-
         private void _moveDown()
         {
             hero.direction = "down";
             while (map[hero.y + 1, hero.x] == Cell.GAP)
             {
-
-
                 hero.y += 1;
                 Console.SetCursorPosition(hero.x, hero.y - 1);
                 Console.Write(' ');
                 upd();
-
-
                 if (check) break;
-
             }
 
         }
