@@ -1,6 +1,6 @@
 using System;
 using System.Threading;
-
+using System.IO;
 namespace intertion
 {
     public struct Design 
@@ -28,36 +28,28 @@ namespace intertion
             Console.Clear();
 
         }
-
-        public void Menu(int x, int y)
+        public void getName(Player hero)
         {
-            string[] inertia = new string[]
-               {"╔══╦═╗ ╔╦═══╦═══╦════╦══╦═══╗",
-                "╚╣╠╣║╚╗║║╔══╣╔═╗║╔╗╔╗╠╣╠╣╔═╗║",
-                " ║║║║╚╗║║╔══╣╔╗╔╝ ║║  ║║║╚═╝║",
-                "╚══╩╝ ╚═╩═══╩╝╚═╝ ╚╝ ╚══╩╝ ╚╝"};
-
-
-
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            for (int i = 0; i < inertia.Length; i++)
-            {
-                Console.SetCursorPosition(x, y);
-                Console.Write(inertia[i]);
-                y++;
-            }
-            Console.SetCursorPosition(30, y + 2 );
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Press E To Continue");
+            Console.Clear();
+            Console.SetCursorPosition(20, 7);
+            Console.Write("Enter your nickname (LESS THEN 6 SYMBOLS):");
+            Console.SetCursorPosition(24, 10);
+            Console.CursorVisible = true;
+            var name = Console.ReadLine();
+            if (name.Length < 6)
+                hero.name = name;
+            else
+                hero.name = "Yours";
+            Console.CursorVisible = false;
         }
-        public static void hud (Player hero)
+        public static void hud(Player hero)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 9);
-            Console.Write("Your Points: " + hero.points);
+            Console.Write("{0} Points: " + hero.points, hero.name);
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 7);
-            Console.Write("Your HeatPoints: ");
+            Console.Write("{0} HeatPoints: ", hero.name);
             Console.Write("        ");
             Console.SetCursorPosition(62, 7);
             for (int i = 0; i < hero.hp; i++)
@@ -69,12 +61,13 @@ namespace intertion
             }
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 9);
-            Console.Write("Your Points: " + hero.points);}
-
+            Console.Write("{0} Points: " + hero.points, hero.name);
+        }
+        
 
         public void Select(int x, int y, char pointer)
         {
-            string[] menu = new string[] { "Start", "Levels", "About", "Quit" };
+            string[] menu = new string[] { "Start", "ScoreBoard", "About", "Quit" };
             int click = 5;
             Console.Clear();
             int temp = y;
@@ -123,20 +116,24 @@ namespace intertion
                 {
                     if (y == temp + 1)
                     {
-                        Console.Clear();
+                        Console.Clear(); Console.Clear();
+                        var top = File.ReadAllLines("Score.txt");
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.SetCursorPosition(x, y);
-                        Console.Write("Level 1");
-                        Console.SetCursorPosition(x, y + 1);
-                        Console.Write("Level 2");
-                        Console.SetCursorPosition(x, y + 2);
-                        Console.Write("Level 3");
-                        Console.SetCursorPosition(x, y + 3);
-                        Console.Write("Level 4");
-                        Console.SetCursorPosition(x - 5, y);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine('>');
+                        for (int i = 0; i < 10; i += 2)
+                        {
+                            Console.SetCursorPosition(x, y + i);
+                            if (top[i].Length > 1)
+                            {
+                                Console.Write("{0} — {1}",top[i],top[i + 1]);
+                            }
+                                
+                            else
+                                Console.Write("Empty");
+                        }
                         Console.ReadKey(true);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Select(25, 8, '☞');
                     }
                     if (y == temp + 2)
                     {
@@ -156,7 +153,7 @@ namespace intertion
         
         }
 
-        public void Rules(Player hero, char trap, char award, char rest, char player)
+        public void Rules(Player hero, Cell trap, Cell award, Cell rest, char player)
         {
           
             Console.SetCursorPosition(40, 2);
@@ -164,13 +161,13 @@ namespace intertion
             Console.WriteLine("{0} - You are ", player);
             Console.SetCursorPosition(40, 3);
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("{0} — Traps", trap);
+            Console.WriteLine("{0} — Traps", trap.sym);
             Console.SetCursorPosition(40, 4);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("{0} — Awards", award);
+            Console.WriteLine("{0} — Awards", award.sym);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.SetCursorPosition(40, 5);
-            Console.WriteLine("{0} — Rest areas", rest);
+            Console.WriteLine("{0} — Teleports", rest.sym);
 
         }
 
