@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.IO;
 namespace intertion
@@ -168,7 +168,8 @@ namespace intertion
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.SetCursorPosition(40, 5);
             Console.WriteLine("{0} — Teleports", rest.sym);
-
+            Console.SetCursorPosition(45, 14);
+            Console.WriteLine("Press R to Restart Game");
         }
 
     }

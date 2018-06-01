@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Media;
@@ -30,7 +30,7 @@ namespace intertion
             var map = new Map(); // char award, char trap
 
            
-            var enemy = new Enemy(6, 6, '@');
+
 
             //design
             var design = new Design();
@@ -61,11 +61,8 @@ namespace intertion
             var upd = new Update(hero, level);
 
             Map.DrawMap(level);
-            //enemy.Draw();
             hero.Draw();
             design.Rules(hero, Cell.TRAP, Cell.AWARD, Cell.TP, player);
-            //Thread sw = new Thread(stopWatch);
-            //sw.Start();
 
             //game
             while (!hero.win)
@@ -76,7 +73,10 @@ namespace intertion
 
                     var key = Console.ReadKey(true);
                     upd.Start(key);
-                }
+                    if (key.Key == ConsoleKey.R)
+                        Game(player, hero);
+                    }
+
             }
             hero.counter++;
             Game(player, hero);

@@ -5,13 +5,18 @@ namespace intertion
     {
        public int x;
        public int y;
-        char sym;
+       public char sym;
         char temp;
         public int points;
         public string direction;
+        public int hp;
+        public string name;
+        public int counter = 1;
+        public bool win = false;
 
         public Player (int x, int y, char sym) 
         {
+            this.hp = 3;    
             this.x = x;
             this.y = y;
             this.sym = sym;
@@ -31,9 +36,13 @@ namespace intertion
             sym = ' ';
             Draw();
         }
-
-       
-          
-
+        public void Reset ()
+        {
+            this.points = 0;
+            this.hp = 3;
+            this.win = false;
+            this.x = 5;
+            this.y = 5;
+        }
     }
 }

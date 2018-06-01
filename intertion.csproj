@@ -39,7 +39,9 @@
     <Compile Include="Design.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="FullScreenConsole.cs" />
+    <Compile Include="FS.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="EnemyMovements.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
@@ -39,7 +39,7 @@ namespace intertion
             //drawing hero
             hero.Draw();
             //win or lose check
-            winOrLose();
+            WinOrLose();
 
         }
         //each 0.040 sec update. Hero drawing and collision checking
@@ -69,11 +69,11 @@ namespace intertion
             //if collision player hited in award or trap than we REcount points
             if (map[hero.y + c, hero.x + z] == Cell.AWARD || map[hero.y + c, hero.x + z] == Cell.TRAP)
             {
-                pointsCounter( z, c);
+                PointsCounter( z, c);
             }
             if (map[hero.y + c, hero.x + z] == Cell.SHIELD)
             {
-                shield(hero);
+                Shield(hero);
             }
             if (map[hero.y + c, hero.x + z] == Cell.ARROW)
             {
@@ -104,19 +104,20 @@ namespace intertion
                 }
             }
             //update points and hp
-            hudUpd();
+            HudUpd();
         }
-        private void winOrLose()
+
+        public static void OnEnemyCollision (Enemy enemy)
         {
-            int awards = 0;
+            
+        }
+
+        private void WinOrLose()
+        {
+            
             if (hero.hp < 1)
             {
-                if (File.Exists("Score.txt"))
-                {
-                    string[] res = new string[] { hero.name, hero.points.ToString() };
-                    var m = File.ReadAllLines("Score.txt");
-                    File.AppendAllLines("Score.txt", res);
-                }
+                WriteScore();
                 Console.Clear();
                 Console.SetCursorPosition(30, 10);
                 Console.ForegroundColor = ConsoleColor.White;
@@ -127,6 +128,7 @@ namespace intertion
             }
             else
             {
+                int awards = 0;
                 foreach (Cell i in map)
                 {
                     if (i == Cell.AWARD)
@@ -134,11 +136,7 @@ namespace intertion
                 }
                 if (awards == 0)
                 {
-                    if (File.Exists("Score.txt"))
-                    {
-                        string[] res = new string[] { hero.name, hero.points.ToString() };
-                        File.AppendAllLines("Score.txt", res);
-                    }
+                    WriteScore();
                     Console.Clear();
                     Console.SetCursorPosition(30, 10);
                     Console.ForegroundColor = ConsoleColor.White;
@@ -148,7 +146,7 @@ namespace intertion
                 }
             }
         }
-        private void pointsCounter(int z, int c)
+        private void PointsCounter(int z, int c)
         {
             if (map[hero.y + c, hero.x + z] == Cell.TRAP)
                 hero.hp -= 1;
@@ -164,7 +162,7 @@ namespace intertion
             Console.Write(' ');
         }
 
-        private void hudUpd()
+        private void HudUpd()
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(45, 7);
@@ -184,8 +182,16 @@ namespace intertion
 
         }
 
-
-        private void shield (Player hero)
+        private void WriteScore ()
+        {
+            if (File.Exists("Score.txt"))
+            {
+                string[] res = new string[] { hero.name, hero.points.ToString() };
+                var m = File.ReadAllLines("Score.txt");
+                File.AppendAllLines("Score.txt", res);
+            }
+        }
+        private void Shield (Player hero)
         {
             if (hero.direction == "up") 
             {
