@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
@@ -24,7 +24,7 @@ namespace intertion
         //Moving
         public void Start(ConsoleKeyInfo key)
         {
-            
+
             check = false;
             //read key
             if (key.Key == ConsoleKey.RightArrow)
@@ -69,7 +69,7 @@ namespace intertion
             //if collision player hited in award or trap than we REcount points
             if (map[hero.y + c, hero.x + z] == Cell.AWARD || map[hero.y + c, hero.x + z] == Cell.TRAP)
             {
-                PointsCounter( z, c);
+                PointsCounter(z, c);
             }
             if (map[hero.y + c, hero.x + z] == Cell.SHIELD)
             {
@@ -102,19 +102,36 @@ namespace intertion
                         if (_check) break;
                     }
                 }
+                check = false;
+                switch (hero.direction)
+                {
+                    case "right":
+                        _moveRight();
+                        break;
+                    case "left":
+                        _moveLeft();
+                        break;
+                    case "down":
+                        _moveDown();
+                        break;
+                    case "up":
+                        _moveUp();
+                        break;
+
+                }
             }
             //update points and hp
             HudUpd();
         }
 
-        public static void OnEnemyCollision (Enemy enemy)
+        public static void OnEnemyCollision(Enemy enemy)
         {
-            
+
         }
 
         private void WinOrLose()
         {
-            
+
             if (hero.hp < 1)
             {
                 WriteScore();
@@ -182,7 +199,7 @@ namespace intertion
 
         }
 
-        private void WriteScore ()
+        private void WriteScore()
         {
             if (File.Exists("Score.txt"))
             {
@@ -191,11 +208,11 @@ namespace intertion
                 File.AppendAllLines("Score.txt", res);
             }
         }
-        private void Shield (Player hero)
+        private void Shield(Player hero)
         {
-            if (hero.direction == "up") 
+            if (hero.direction == "up")
             {
-                 _moveRight();
+                _moveRight();
                 check = true;
                 return;
             }
@@ -217,7 +234,7 @@ namespace intertion
                 check = true;
                 return;
             }
-        } 
+        }
         private void _moveLeft()
         {
             hero.direction = "left";
