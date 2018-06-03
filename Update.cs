@@ -124,10 +124,7 @@ namespace intertion
             HudUpd();
         }
 
-        public static void OnEnemyCollision(Enemy enemy)
-        {
 
-        }
 
         private void WinOrLose()
         {

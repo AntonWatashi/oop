@@ -4,3 +4,9 @@
 /Users/user/Projects/intertion/intertion/obj/x86/Debug/intertion.exe
 /Users/user/Projects/intertion/intertion/obj/x86/Debug/intertion.pdb
 /Users/user/Projects/intertion/intertion/obj/x86/Debug/intertion.csprojResolveAssemblyReference.cache
+/Users/user/Downloads/oop-master 2/obj/x86/Debug/intertion.csprojResolveAssemblyReference.cache
+/Users/user/Downloads/oop-master 2/obj/x86/Debug/intertion.csproj.CoreCompileInputs.cache
+/Users/user/Downloads/oop-master 2/obj/x86/Debug/intertion.exe
+/Users/user/Downloads/oop-master 2/obj/x86/Debug/intertion.pdb
+/Users/user/Downloads/oop-master 2/bin/Debug/intertion.exe
+/Users/user/Downloads/oop-master 2/bin/Debug/intertion.pdb
